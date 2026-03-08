@@ -1,0 +1,17 @@
+{
+  "name": "sonnetics-core",
+  "version": "0.1.0",
+  "description": "Wake-word inference (WASM)",
+  "main": "pkg/sonnetics_core.js",
+  "types": "pkg/sonnetics_core.d.ts",
+  "files": ["pkg"],
+  "sideEffects": false,
+  "scripts": {
+    "build": "wasm-pack build --target bundler --out-dir pkg"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sonnetics/sonnetics-core"
+  },
+  "license": "Apache-2.0"
+}

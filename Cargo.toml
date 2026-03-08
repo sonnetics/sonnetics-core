@@ -1,0 +1,38 @@
+[package]
+name = "sonnetics-core"
+version = "0.1.0"
+edition = "2021"
+description = "Wake-word inference library: streaming ONNX inference, log-mel spectrograms. For use via Rust, Python (PyO3), or JavaScript (WASM)."
+license = "Apache-2.0"
+repository = "https://github.com/sonnetics/sonnetics-core"
+readme = "README.md"
+
+[lib]
+name = "sonnetics_core"
+path = "src/lib.rs"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+anyhow = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+mel_spec = { version = "0.3", features = ["wasm"] }
+ndarray = "0.16"
+realfft = "3.5"
+resampler = "0.4"
+rustfft = "6.1"
+tract-onnx = "0.22"
+hound = "3.5"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen = "0.2"
+js-sys = "0.3"
+getrandom = { version = "0.2", features = ["js"] }
+
+[[example]]
+name = "run"
+path = "examples/run.rs"
+
+[[example]]
+name = "run_detect"
+path = "examples/run_detect.rs"

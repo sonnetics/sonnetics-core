@@ -1,0 +1,9 @@
+/target
+/pkg
+Cargo.lock
+*.rs.bk
+.DS_Store
+.idea
+.vscode
+*.swp
+*.swo
