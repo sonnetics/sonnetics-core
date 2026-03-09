@@ -1,0 +1,14 @@
+[build-system]
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "sonnetics-core"
+version = "0.1.0"
+description = "Wake-word inference library: streaming ONNX inference (Python bindings)"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.9"
+
+[tool.maturin]
+module-name = "sonnetics_core"

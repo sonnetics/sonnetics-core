@@ -37,7 +37,7 @@ fn main() -> Result<()> {
         hound::SampleFormat::Float => reader.samples::<f32>().map(|s| s.unwrap_or(0.0)).collect(),
     };
 
-    let mut engine = WakeEngine::new(model_path, sample_rate, channels)?;
+    let mut engine = WakeEngine::from_path(model_path, sample_rate, channels)?;
 
     println!("Processing {} ({} Hz, {} ch)\n", wav_path, sample_rate, channels);
 

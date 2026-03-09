@@ -48,7 +48,7 @@ cargo run --example run -- <model_dir> <path.wav>
 use sonnetics_core::wake_engine::WakeEngine;
 use std::path::Path;
 
-let mut engine = WakeEngine::new(Path::new("./models"), 16000, 1)?;
+let mut engine = WakeEngine::from_path(Path::new("./models"), 16000, 1)?;
 let probs = engine.process(&audio_samples)?;
 for p in probs {
     println!("P(wake) = {:.4}", p);

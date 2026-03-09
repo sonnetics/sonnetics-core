@@ -72,10 +72,9 @@ const SAMPLE_RATE: u32 = 16_000;
 const LAYER2_STATE_LAYERS: usize = 2;
 const LAYER2_STATE_SIZE: usize = 128;
 
-pub const FRAME_SAMPLES: usize = 6600; // ~0.41 s, yields 32 mel frames
-pub const HOP_SAMPLES: usize = 3200;   // 0.2 s
-pub const N_MELS: usize = 40;
-pub const WINDOW_FRAMES: usize = 32;
+const FRAME_SAMPLES: usize = 6600; // ~0.41 s, yields 32 mel frames
+const HOP_SAMPLES: usize = 3200;   // 0.2 s
+const WINDOW_FRAMES: usize = 32;
 
 /// Streaming wake-word inference engine.
 pub struct WakeEngine {
@@ -158,32 +157,10 @@ impl RingBuffer {
 }
 
 impl WakeEngine {
-    /// Create engine from a model directory containing manifest.json and the files it references.
+    /// Create engine from in-memory model pack. Map keys: "manifest.json" and the file paths referenced therein (e.g. "models/layer1.onnx", "models/layer2.onnx").
     /// Audio is downmixed to mono if `channels > 1` and resampled to 16 kHz if `sample_rate != 16000`.
     /// Supported sample rates: 22050, 16000, 32000, 44100, 48000, 88200, 96000, 176400, 192000, 384000.
-    pub fn new(model_path: &Path, sample_rate: u32, channels: u16) -> Result<Self> {
-        let manifest_path = model_path.join("manifest.json");
-        let manifest_bytes = fs::read(&manifest_path)
-            .with_context(|| format!("read manifest at {:?}", manifest_path))?;
-        let manifest: Manifest =
-            serde_json::from_slice(&manifest_bytes).context("parse manifest.json")?;
-
-        let mut files = HashMap::new();
-        files.insert("manifest.json".to_string(), manifest_bytes);
-
-        for m in &manifest.models {
-            let file_path = model_path.join(&m.file);
-            let bytes = fs::read(&file_path)
-                .with_context(|| format!("read {:?} at {:?}", m.file, file_path))?;
-            files.insert(m.file.clone(), bytes);
-        }
-
-        Self::from_files(&files, sample_rate, channels)
-    }
-
-    /// Create engine from file map. Reads manifest.json to find layer1 and layer2 models.
-    /// Expects keys: "manifest.json", and the file paths referenced therein (e.g. "models/layer1.onnx", "models/layer2.onnx").
-    pub fn from_files(
+    pub fn new(
         files: &HashMap<String, Vec<u8>>,
         sample_rate: u32,
         channels: u16,
@@ -213,6 +190,27 @@ impl WakeEngine {
             .unwrap_or_else(|| "wake".to_string());
 
         Self::build_from_bytes(layer1, layer2, sample_rate, channels, phrase_detected)
+    }
+
+    /// Create engine from a model directory on disk. Reads manifest.json and the files it references.
+    pub fn from_path(model_path: &Path, sample_rate: u32, channels: u16) -> Result<Self> {
+        let manifest_path = model_path.join("manifest.json");
+        let manifest_bytes = fs::read(&manifest_path)
+            .with_context(|| format!("read manifest at {:?}", manifest_path))?;
+        let manifest: Manifest =
+            serde_json::from_slice(&manifest_bytes).context("parse manifest.json")?;
+
+        let mut files = HashMap::new();
+        files.insert("manifest.json".to_string(), manifest_bytes);
+
+        for m in &manifest.models {
+            let file_path = model_path.join(&m.file);
+            let bytes = fs::read(&file_path)
+                .with_context(|| format!("read {:?} at {:?}", m.file, file_path))?;
+            files.insert(m.file.clone(), bytes);
+        }
+
+        Self::new(&files, sample_rate, channels)
     }
 
     fn build_from_bytes(

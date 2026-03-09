@@ -40,20 +40,19 @@ fn js_files_to_map(files: JsValue) -> Result<HashMap<String, Vec<u8>>, JsError> 
 
 /// Create engine from file map.
 /// files: Record<string, ArrayBuffer> with manifest.json, models/layer1.onnx, models/layer2.onnx.
-/// Called as init(files, sample_rate, channels) from sonnetics-js.
 #[wasm_bindgen(js_name = init)]
-pub fn init_with_files(
+pub fn init(
     files: JsValue,
     sample_rate: u32,
     channels: u16,
 ) -> Result<WasmWakeEngine, JsError> {
     let map = js_files_to_map(files)?;
-    let inner = WakeEngine::from_files(&map, sample_rate, channels)
+    let inner = WakeEngine::new(&map, sample_rate, channels)
         .map_err(|e| JsError::new(&e.to_string()))?;
     Ok(WasmWakeEngine { inner })
 }
 
-/// Wake-word inference engine. Create with `WakeEngine::new()`, then call `process()`.
+/// Wake-word inference engine. Create with `init()`, then call `detect()` or `detectProbs()`.
 #[wasm_bindgen]
 pub struct WasmWakeEngine {
     inner: WakeEngine,
