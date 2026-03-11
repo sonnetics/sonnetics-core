@@ -1,6 +1,6 @@
 {
   "name": "@sonnetics/core",
-  "version": "0.0.1-beta.0",
+  "version": "0.0.1-beta.1",
   "description": "Sonnetics core library",
   "main": "pkg/sonnetics_core.js",
   "types": "pkg/sonnetics_core.d.ts",
