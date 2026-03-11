@@ -1,0 +1,9 @@
+# Exclude from npm pack (pkg/ is included via "files" in package.json)
+/target
+Cargo.lock
+*.rs.bk
+.DS_Store
+.idea
+.vscode
+*.swp
+*.swo
