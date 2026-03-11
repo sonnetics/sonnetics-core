@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "sonnetics-core"
-version = "0.0.1-beta.3"
+version = "0.0.1-beta.4"
 description = "Wake-word inference library: streaming ONNX inference (Python bindings)"
 readme = "README.md"
 license = { text = "Apache-2.0" }
