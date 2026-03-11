@@ -1,13 +1,15 @@
 {
-  "name": "sonnetics-core",
+  "name": "@sonnetics/core",
   "version": "0.1.0",
-  "description": "Wake-word inference (WASM)",
+  "description": "Sonnetics core library",
   "main": "pkg/sonnetics_core.js",
   "types": "pkg/sonnetics_core.d.ts",
   "files": ["pkg"],
   "sideEffects": false,
+  "keywords": ["wake-word", "speech", "voice", "voice-detection", "sonnetics"],
   "scripts": {
-    "build": "wasm-pack build --target bundler --out-dir pkg"
+    "build": "wasm-pack build --target bundler --out-dir pkg",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",

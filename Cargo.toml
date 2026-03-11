@@ -2,7 +2,7 @@
 name = "sonnetics-core"
 version = "0.1.0"
 edition = "2021"
-description = "Wake-word inference library: streaming ONNX inference, log-mel spectrograms. For use via Rust, Python (PyO3), or JavaScript (WASM)."
+description = "Wake-word detection library."
 license = "Apache-2.0"
 repository = "https://github.com/sonnetics/sonnetics-core"
 readme = "README.md"
