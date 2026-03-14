@@ -1,0 +1,67 @@
+# Build wheels for all platforms and publish to PyPI on tag push.
+#
+# Setup (Trusted Publishing, recommended):
+#   1. Create project "sonnetics-core" on pypi.org
+#   2. Add GitHub as trusted publisher: PyPI project → Publishing → Add
+#      (owner: sonnetics, repo: sonnetics-core, environment: pypi)
+#   3. Create GitHub environment "pypi" in repo Settings → Environments
+#
+# Alternative: Add PYPI_API_TOKEN to repo secrets and remove environment/permissions below.
+#
+# Release: git tag v0.0.1-beta.8 && git push --tags
+
+name: Publish to PyPI
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux
+          - os: macos-latest
+            platform: macos
+          - os: windows-latest
+            platform: windows
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+
+      - name: Build wheels
+        uses: PyO3/maturin-action@v1
+        with:
+          args: --release --out dist --compatibility pypi ${{ matrix.os == 'ubuntu-latest' && '--sdist' || '' }}
+          manylinux: 2014
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wheels-${{ matrix.platform }}
+          path: dist
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          pattern: wheels-*
+          merge-multiple: true
+
+      - uses: pypa/gh-action-pypi-publish@release/v1
