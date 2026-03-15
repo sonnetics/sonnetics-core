@@ -1,0 +1,43 @@
+# Publish @sonnetics/core to npm on tag push.
+#
+# Setup (Trusted Publishing): npmjs.com → package @sonnetics/core → Settings →
+#   Trusted publishing → Add GitHub Actions → workflow: publish-npm.yml
+#
+# Release: ./release.sh  (bumps, commits, tags, pushes)
+
+name: Publish to npm
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Install wasm-pack
+        run: cargo install wasm-pack
+
+      - name: Build WASM
+        run: wasm-pack build --target bundler --out-dir pkg
+
+      - name: Verify WASM output
+        run: test -f pkg/sonnetics_core_bg.wasm || (echo "WASM build failed" && exit 1)
+
+      - name: Set package name
+        run: sed -i 's/"name": "sonnetics-core"/"name": "@sonnetics\/core"/' pkg/package.json
+
+      - name: Publish to npm
+        working-directory: pkg
+        run: npm publish --tag beta --access public

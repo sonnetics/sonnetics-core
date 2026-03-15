@@ -24,7 +24,7 @@ rustfft = "6.1"
 tract-onnx = "0.22"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-pyo3 = { version = "0.24", features = ["extension-module"] }
+pyo3 = { version = "0.28", features = ["extension-module"] }
 
 [dev-dependencies]
 hound = "3.5"
