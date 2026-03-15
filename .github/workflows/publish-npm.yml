@@ -36,7 +36,7 @@ jobs:
         run: test -f pkg/sonnetics_core_bg.wasm || (echo "WASM build failed" && exit 1)
 
       - name: Set package name
-        run: sed -i 's/"name": "sonnetics-core"/"name": "@sonnetics\/core"/' pkg/package.json
+        run: "sed -i 's|\"name\": \"sonnetics-core\"|\"name\": \"@sonnetics/core\"|' pkg/package.json"
 
       - name: Publish to npm
         working-directory: pkg
