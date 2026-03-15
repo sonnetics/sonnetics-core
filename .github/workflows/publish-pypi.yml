@@ -23,6 +23,8 @@ jobs:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
 
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
@@ -34,8 +36,15 @@ jobs:
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
-          args: --release --out dist --compatibility pypi ${{ matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9' && '--sdist' || '' }}
+          args: --release --out dist --compatibility pypi --interpreter python${{ matrix.python-version }}
           manylinux: 2014
+
+      - name: Build sdist
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
+        uses: PyO3/maturin-action@v1
+        with:
+          command: sdist
+          args: --out dist
 
       - uses: actions/upload-artifact@v4
         with:
