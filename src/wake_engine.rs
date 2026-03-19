@@ -170,26 +170,7 @@ impl WakeEngine {
             .context("pack must contain manifest.json")?;
         let manifest: Manifest =
             serde_json::from_slice(manifest_bytes).context("parse manifest.json")?;
-
-        let mut layer1_bytes: Option<&Vec<u8>> = None;
-        let mut layer2_bytes: Option<&Vec<u8>> = None;
-        for m in &manifest.models {
-            if m.id == "layer1" {
-                layer1_bytes = files.get(&m.file);
-            } else if m.id == "layer2" {
-                layer2_bytes = files.get(&m.file);
-            }
-        }
-
-        let layer1 = layer1_bytes.context("manifest must define model with id 'layer1'")?;
-        let layer2 = layer2_bytes.context("manifest must define model with id 'layer2'")?;
-        let phrase_detected = manifest
-            .labels
-            .as_ref()
-            .and_then(|l| l.get(1).cloned())
-            .unwrap_or_else(|| "wake".to_string());
-
-        Self::build_from_bytes(layer1, layer2, sample_rate, channels, phrase_detected)
+        Self::build_from_manifest_and_files(&manifest, files, sample_rate, channels)
     }
 
     /// Create engine from a model directory on disk. Reads manifest.json and the files it references.
@@ -210,7 +191,34 @@ impl WakeEngine {
             files.insert(m.file.clone(), bytes);
         }
 
-        Self::new(&files, sample_rate, channels)
+        Self::build_from_manifest_and_files(&manifest, &files, sample_rate, channels)
+    }
+
+    fn build_from_manifest_and_files(
+        manifest: &Manifest,
+        files: &HashMap<String, Vec<u8>>,
+        sample_rate: u32,
+        channels: u16,
+    ) -> Result<Self> {
+        let mut layer1_bytes: Option<&Vec<u8>> = None;
+        let mut layer2_bytes: Option<&Vec<u8>> = None;
+        for m in &manifest.models {
+            if m.id == "layer1" {
+                layer1_bytes = files.get(&m.file);
+            } else if m.id == "layer2" {
+                layer2_bytes = files.get(&m.file);
+            }
+        }
+
+        let layer1 = layer1_bytes.context("manifest must define model with id 'layer1'")?;
+        let layer2 = layer2_bytes.context("manifest must define model with id 'layer2'")?;
+        let phrase_detected = manifest
+            .labels
+            .as_ref()
+            .and_then(|l| l.get(1).cloned())
+            .unwrap_or_else(|| "wake".to_string());
+
+        Self::build_from_bytes(layer1, layer2, sample_rate, channels, phrase_detected)
     }
 
     fn build_from_bytes(

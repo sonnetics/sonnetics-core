@@ -13,3 +13,4 @@ requires-python = ">=3.9,<=3.14"
 [tool.maturin]
 module-name = "sonnetics_core"
 manylinux = "2014"
+features = ["python"]

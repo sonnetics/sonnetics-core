@@ -1,4 +1,5 @@
 # sonnetics-core
 
-Wake-word inference library for [Sonnetics](https://sonnetics.com). This is the core library that support other detection in other languages.
+Wake-word inference library. Powers detection in Python, JavaScript, and Rust.
 
+[Documentation](https://sonnetics.com/documentation/rust)

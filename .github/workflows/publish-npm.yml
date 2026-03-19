@@ -41,4 +41,4 @@ jobs:
 
       - name: Publish to npm
         working-directory: pkg
-        run: npm publish --tag beta --access public
+        run: npm publish --tag beta --access public --provenance

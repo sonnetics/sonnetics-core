@@ -7,6 +7,10 @@ license = "Apache-2.0"
 repository = "https://github.com/sonnetics/sonnetics-core"
 readme = "README.md"
 
+[features]
+default = []
+python = ["dep:pyo3"]
+
 [lib]
 name = "sonnetics_core"
 path = "src/lib.rs"
@@ -24,7 +28,7 @@ rustfft = "6.1"
 tract-onnx = "0.22"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-pyo3 = { version = "0.28", features = ["extension-module"] }
+pyo3 = { version = "0.28", features = ["extension-module"], optional = true }
 
 [dev-dependencies]
 hound = "3.5"

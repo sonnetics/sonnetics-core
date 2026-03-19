@@ -39,11 +39,6 @@ struct PyWakeEngine {
 
 #[pymethods]
 impl PyWakeEngine {
-    /// Reset hidden state (e.g. when starting a new session).
-    fn reset(&mut self) {
-        self.inner.reset();
-    }
-
     /// Process audio and return the detected phrase if any frame's P(wake) >= threshold, None otherwise.
     /// Resets hidden state when triggered.
     /// audio: sequence of float32 samples (interleaved if multi-channel).
