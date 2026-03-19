@@ -13,15 +13,7 @@ const SAMPLE_RATE: f64 = 16_000.0;
 /// MelSpectrogram(sample_rate, n_mels=40, hop_length=200, center=False) + AmplitudeToDB().
 pub fn log_mel_spectrogram(audio: &[f32]) -> Array2<f64> {
     let mut spectrogram = mel_spec::stft::Spectrogram::new(N_FFT, HOP_LENGTH);
-    let filters = mel_spec::mel::mel(
-        SAMPLE_RATE,
-        N_FFT,
-        N_MELS,
-        None,
-        None,
-        true,
-        false,
-    );
+    let filters = mel_spec::mel::mel(SAMPLE_RATE, N_FFT, N_MELS, None, None, true, false);
 
     let mut frames = Vec::new();
     for chunk in audio.chunks(HOP_LENGTH) {

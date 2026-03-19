@@ -1,0 +1,34 @@
+# Publish sonnetics-core to crates.io on tag push.
+#
+# Setup (Trusted Publishing): crates.io → Account Settings → API tokens →
+#   Add new token (for first publish) or configure trusted publishing:
+#   https://crates.io/docs/trusted-publishing
+#
+# Release: ./release.sh  (bumps, commits, tags, pushes)
+
+name: Publish to crates.io
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Authenticate with crates.io
+        id: auth
+        uses: rust-lang/crates-io-auth-action@v1
+
+      - name: Publish
+        run: cargo publish
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}

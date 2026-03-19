@@ -31,10 +31,7 @@ struct Manifest {
     labels: Option<Vec<String>>,
 }
 
-fn load_model_from_read(
-    r: &mut dyn Read,
-    name: &str,
-) -> Result<TypedRunnableModel<TypedModel>> {
+fn load_model_from_read(r: &mut dyn Read, name: &str) -> Result<TypedRunnableModel<TypedModel>> {
     tract_onnx::onnx()
         .model_for_read(r)
         .map_err(|e| anyhow::anyhow!("load {name} model: {}", e))?
@@ -44,13 +41,7 @@ fn load_model_from_read(
         .map_err(|e| anyhow::anyhow!("optimize {name} model: {}", e))
 }
 
-fn create_resampler(
-    sample_rate: u32,
-) -> Result<(
-    Option<ResamplerFir>,
-    Vec<f32>,
-    Vec<f32>,
-)> {
+fn create_resampler(sample_rate: u32) -> Result<(Option<ResamplerFir>, Vec<f32>, Vec<f32>)> {
     if sample_rate == SAMPLE_RATE {
         return Ok((None, Vec::new(), Vec::new()));
     }
@@ -73,7 +64,7 @@ const LAYER2_STATE_LAYERS: usize = 2;
 const LAYER2_STATE_SIZE: usize = 128;
 
 const FRAME_SAMPLES: usize = 6600; // ~0.41 s, yields 32 mel frames
-const HOP_SAMPLES: usize = 3200;   // 0.2 s
+const HOP_SAMPLES: usize = 3200; // 0.2 s
 const WINDOW_FRAMES: usize = 32;
 
 /// Streaming wake-word inference engine.
@@ -160,11 +151,7 @@ impl WakeEngine {
     /// Create engine from in-memory model pack. Map keys: "manifest.json" and the file paths referenced therein (e.g. "models/layer1.onnx", "models/layer2.onnx").
     /// Audio is downmixed to mono if `channels > 1` and resampled to 16 kHz if `sample_rate != 16000`.
     /// Supported sample rates: 22050, 16000, 32000, 44100, 48000, 88200, 96000, 176400, 192000, 384000.
-    pub fn new(
-        files: &HashMap<String, Vec<u8>>,
-        sample_rate: u32,
-        channels: u16,
-    ) -> Result<Self> {
+    pub fn new(files: &HashMap<String, Vec<u8>>, sample_rate: u32, channels: u16) -> Result<Self> {
         let manifest_bytes = files
             .get("manifest.json")
             .context("pack must contain manifest.json")?;
@@ -233,7 +220,13 @@ impl WakeEngine {
 
         let layer1_model = load_model_from_read(&mut layer1_cursor, "layer 1")?;
         let layer2_model = load_model_from_read(&mut layer2_cursor, "layer 2")?;
-        Self::build(layer1_model, layer2_model, sample_rate, channels, phrase_detected)
+        Self::build(
+            layer1_model,
+            layer2_model,
+            sample_rate,
+            channels,
+            phrase_detected,
+        )
     }
 
     fn build(
@@ -243,8 +236,7 @@ impl WakeEngine {
         channels: u16,
         phrase_detected: String,
     ) -> Result<Self> {
-        let (resampler, resampler_output_buf, resampler_input_buf) =
-            create_resampler(sample_rate)?;
+        let (resampler, resampler_output_buf, resampler_input_buf) = create_resampler(sample_rate)?;
         let capacity = FRAME_SAMPLES + HOP_SAMPLES;
         Ok(Self {
             ring: RingBuffer::new(capacity),
@@ -347,8 +339,12 @@ impl WakeEngine {
         );
 
         let result = self.layer2_model.run(tvec!(embedding, hidden_t))?;
-        let a0 = result[0].to_array_view::<f32>().context("layer 2 output 0")?;
-        let a1 = result[1].to_array_view::<f32>().context("layer 2 output 1")?;
+        let a0 = result[0]
+            .to_array_view::<f32>()
+            .context("layer 2 output 0")?;
+        let a1 = result[1]
+            .to_array_view::<f32>()
+            .context("layer 2 output 1")?;
         let (logits, new_hidden) = if a0.len() == 2 {
             (a0.iter().copied().collect::<Vec<_>>(), result[1].clone())
         } else if a1.len() == 2 {

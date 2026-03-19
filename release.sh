@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Bump version, commit, tag, push. Triggers publish workflows (PyPI + npm).
+# Bump version, commit, tag, push. Triggers publish workflows (crates.io, PyPI, npm).
 # Usage: ./release.sh [--dry-run]
 # Requires clean working tree.
 
@@ -7,7 +7,7 @@ set -e
 
 DRY_RUN=false
 for arg in "$@"; do
-  [[ "$arg" == "--dry" ]] && DRY_RUN=true
+  [[ "$arg" == "--dry-run" ]] && DRY_RUN=true
 done
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -46,4 +46,4 @@ git tag "v$VERSION"
 git push && git push --tags
 
 echo ""
-echo "Done. GitHub Actions will publish to PyPI and npm."
+echo "Done. GitHub Actions will publish to crates.io, PyPI, and npm."

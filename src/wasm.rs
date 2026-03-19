@@ -13,14 +13,10 @@ use crate::wake_engine::WakeEngine;
 /// Create engine from file map.
 /// files: Record<string, ArrayBuffer> with manifest.json, models/layer1.onnx, models/layer2.onnx.
 #[wasm_bindgen(js_name = init)]
-pub fn init(
-    files: JsValue,
-    sample_rate: u32,
-    channels: u16,
-) -> Result<WasmWakeEngine, JsError> {
+pub fn init(files: JsValue, sample_rate: u32, channels: u16) -> Result<WasmWakeEngine, JsError> {
     let map = js_files_to_map(files)?;
-    let inner = WakeEngine::new(&map, sample_rate, channels)
-        .map_err(|e| JsError::new(&e.to_string()))?;
+    let inner =
+        WakeEngine::new(&map, sample_rate, channels).map_err(|e| JsError::new(&e.to_string()))?;
     Ok(WasmWakeEngine { inner })
 }
 
@@ -34,7 +30,9 @@ pub struct WasmWakeEngine {
 impl WasmWakeEngine {
     /// Returns the detected phrase if any frame's P(wake) >= threshold, null otherwise. Resets hidden state when triggered.
     pub fn detect(&mut self, audio: &[f32], threshold: f32) -> Result<Option<String>, JsError> {
-        self.inner.detect(audio, threshold).map_err(|e| JsError::new(&e.to_string()))
+        self.inner
+            .detect(audio, threshold)
+            .map_err(|e| JsError::new(&e.to_string()))
     }
 }
 
@@ -57,9 +55,7 @@ fn js_files_to_map(files: JsValue) -> Result<HashMap<String, Vec<u8>>, JsError> 
         } else if let Ok(u8arr) = val.dyn_into::<Uint8Array>() {
             u8arr.to_vec()
         } else {
-            return Err(JsError::new(
-                "file value must be ArrayBuffer or Uint8Array",
-            ));
+            return Err(JsError::new("file value must be ArrayBuffer or Uint8Array"));
         };
         map.insert(key, vec);
     }

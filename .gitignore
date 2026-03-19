@@ -1,6 +1,8 @@
 /target
 /pkg
+/dist
 Cargo.lock
+*.egg-info
 *.rs.bk
 .DS_Store
 .idea
