@@ -5,8 +5,10 @@ edition = "2021"
 description = "Wake-word detection library."
 license = "Apache-2.0"
 repository = "https://github.com/sonnetics/sonnetics-core"
+documentation = "https://sonnetics.com/documentation/rust"
+homepage = "https://sonnetics.com"
 readme = "README.md"
-keywords = ["wake-word", "voice", "speech", "audio"]
+keywords = ["wake-word", "voice", "voice command", "speech", "audio"]
 categories = ["audio", "science"]
 
 [features]
@@ -34,6 +36,13 @@ pyo3 = { version = "0.28", features = ["extension-module"], optional = true }
 wasm-bindgen = "0.2"
 js-sys = "0.3"
 getrandom = { version = "0.2", features = ["js"] }
+
+[dev-dependencies]
+flate2 = "1.0"
+hound = "3.5"
+reqwest = { version = "0.12", features = ["blocking", "rustls-tls"] }
+tar = "0.4"
+tempfile = "3.14"
 
 [[example]]
 name = "run"
