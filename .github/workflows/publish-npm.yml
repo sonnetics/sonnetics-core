@@ -1,7 +1,9 @@
 # Publish @sonnetics/core to npm on tag push.
 #
-# Setup (Trusted Publishing): npmjs.com → package @sonnetics/core → Settings →
-#   Trusted publishing → Add GitHub Actions → workflow: publish-npm.yml
+# Setup:
+#   1. Create an npm Automation token at npmjs.com → Account → Access Tokens
+#   2. Add NPM_TOKEN as a repository secret (Settings → Secrets → Actions)
+#   3. Optionally: Configure Trusted Publishing on npm for provenance
 #
 # Release: ./release.sh  (bumps, commits, tags, pushes)
 
@@ -41,4 +43,6 @@ jobs:
 
       - name: Publish to npm
         working-directory: pkg
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --tag beta --access public --provenance

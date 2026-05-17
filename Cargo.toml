@@ -8,7 +8,7 @@ repository = "https://github.com/sonnetics/sonnetics-core"
 documentation = "https://sonnetics.com/documentation/rust"
 homepage = "https://sonnetics.com"
 readme = "README.md"
-keywords = ["wake-word", "voice", "voice command", "speech", "audio"]
+keywords = ["wake-word", "voice", "voice-command", "speech", "audio"]
 categories = ["audio", "science"]
 
 [features]
