@@ -69,8 +69,9 @@ macro_rules! test_audio_fixture {
         fn $name() {
             let (_temp_dir, model_path) = load_model(MODEL_URL).expect("failed to download model");
 
-            let mut engine = sonnetics_core::WakeEngine::from_path(&model_path, SAMPLE_RATE, CHANNELS)
-                .expect("failed to create engine");
+            let mut engine =
+                sonnetics_core::WakeEngine::from_path(&model_path, SAMPLE_RATE, CHANNELS)
+                    .expect("failed to create engine");
 
             let audio_path = fixtures_dir().join($file);
             let audio = load_wav(&audio_path).expect("failed to load audio fixture");
@@ -102,9 +103,8 @@ test_audio_fixture!(test_negative_sample, "negative.wav", false);
 fn test_silence() {
     let (_temp_dir, model_path) = load_model(MODEL_URL).expect("failed to download model");
 
-    let mut engine =
-        sonnetics_core::WakeEngine::from_path(&model_path, SAMPLE_RATE, CHANNELS)
-            .expect("failed to create engine");
+    let mut engine = sonnetics_core::WakeEngine::from_path(&model_path, SAMPLE_RATE, CHANNELS)
+        .expect("failed to create engine");
 
     let silence: Vec<f32> = vec![0.0; SAMPLE_RATE as usize * 2]; // 2 seconds
     let result = run_detection(&mut engine, &silence).expect("detection failed");

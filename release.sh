@@ -18,6 +18,13 @@ if [[ -n $(git status --porcelain) ]] && [[ "$DRY_RUN" != true ]]; then
   exit 1
 fi
 
+preflight() {
+  echo "Running preflight checks..."
+  cargo fmt -- --check
+  cargo clippy -- -D warnings
+  cargo test
+}
+
 CURRENT=$(grep '^version = ' Cargo.toml | sed 's/version = "\(.*\)"/\1/')
 if [[ "$CURRENT" =~ ^(.*-beta\.)([0-9]+)$ ]]; then
   VERSION="${BASH_REMATCH[1]}$((${BASH_REMATCH[2]} + 1))"
@@ -27,6 +34,7 @@ else
 fi
 
 if [[ "$DRY_RUN" == true ]]; then
+  preflight
   echo "[dry-run] Would release $VERSION"
   echo "[dry-run] Would update Cargo.toml, pyproject.toml"
   echo "[dry-run] Would: git commit -m \"chore: release $VERSION\""
@@ -34,6 +42,8 @@ if [[ "$DRY_RUN" == true ]]; then
   echo "[dry-run] Would: git push && git push --tags"
   exit 0
 fi
+
+preflight
 
 echo "Releasing $VERSION"
 

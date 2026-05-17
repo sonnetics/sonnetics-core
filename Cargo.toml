@@ -9,7 +9,7 @@ documentation = "https://sonnetics.com/documentation/rust"
 homepage = "https://sonnetics.com"
 readme = "README.md"
 keywords = ["wake-word", "voice", "voice-command", "speech", "audio"]
-categories = ["audio", "science"]
+categories = ["multimedia::audio", "science"]
 
 [features]
 default = []
