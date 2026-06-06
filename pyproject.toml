@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "sonnetics-core"
-version = "0.0.1-beta.17"
+version = "0.0.1-beta.18"
 description = "Wake-word detection library."
 readme = "README.md"
 license = { text = "Apache-2.0" }
