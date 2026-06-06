@@ -8,6 +8,9 @@ pub mod wake_engine;
 
 pub use wake_engine::WakeEngine;
 
+#[cfg(feature = "helpers")]
+pub mod helpers;
+
 #[cfg(target_arch = "wasm32")]
 mod wasm;
 

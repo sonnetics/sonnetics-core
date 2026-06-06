@@ -48,9 +48,9 @@ jobs:
             - name: Verify WASM output
               run: test -f pkg/sonnetics_core_bg.wasm || (echo "WASM build failed" && exit 1)
 
-            - name: Restore canonical package.json and sync version
+            - name: Copy canonical package.json and sync version
               run: |
-                  git checkout pkg/package.json
+                  cp package.json pkg/package.json
                   VERSION=$(grep '^version' Cargo.toml | sed 's/.*"\(.*\)"/\1/')
                   sed -i "s/\"version\": \".*\"/\"version\": \"$VERSION\"/" pkg/package.json
 

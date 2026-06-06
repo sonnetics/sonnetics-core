@@ -1,0 +1,37 @@
+{
+    "name": "sonnetics-core",
+    "type": "module",
+    "description": "Wake-word detection library.",
+    "version": "0.0.1-beta.16",
+    "license": "Apache-2.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/sonnetics/sonnetics-core"
+    },
+    "files": [
+        "sonnetics_core_bg.wasm",
+        "sonnetics_core.js",
+        "sonnetics_core_bg.js",
+        "sonnetics_core.d.ts"
+    ],
+    "main": "sonnetics_core.js",
+    "types": "sonnetics_core.d.ts",
+    "exports": {
+        ".": {
+            "import": "./sonnetics_core.js",
+            "default": "./sonnetics_core.js"
+        },
+        "./*": "./*"
+    },
+    "homepage": "https://sonnetics.com",
+    "sideEffects": [
+        "./sonnetics_core.js"
+    ],
+    "keywords": [
+        "wake-word",
+        "voice",
+        "voice-command",
+        "speech",
+        "audio"
+    ]
+}
