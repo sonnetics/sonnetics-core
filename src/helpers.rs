@@ -11,7 +11,7 @@
 //! use sonnetics_core::helpers::{ensure_model, MicStream};
 //! use sonnetics_core::WakeEngine;
 //!
-//! let model_path = ensure_model("sonnetics-model-efea8354-3f81-4c61-9d50-7452cb901620")?;
+//! let model_path = ensure_model("sonnetics-model-a770c126-a4ff-4be4-b95e-7e104a01da73")?;
 //! let mut mic = MicStream::open_default()?;
 //! let mut engine = WakeEngine::from_path(&model_path, mic.sample_rate(), mic.channels())?;
 //!

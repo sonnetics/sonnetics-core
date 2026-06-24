@@ -5,7 +5,7 @@ use std::path::{Path, PathBuf};
 use tar::Archive;
 
 const MODEL_URL: &str =
-    "https://cdn.sonnetics.com/models/sonnetics-model-efea8354-3f81-4c61-9d50-7452cb901620.tar.gz";
+    "https://cdn.sonnetics.com/models/sonnetics-model-a770c126-a4ff-4be4-b95e-7e104a01da73.tar.gz";
 
 const SAMPLE_RATE: u32 = 16_000;
 const CHANNELS: u16 = 1;

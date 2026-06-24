@@ -20,7 +20,7 @@ fn main() -> Result<()> {
     // Replace with your own audio samples (e.g. read from a microphone or WAV file).
     let audio_samples = vec![0.0_f32; 8_000];
 
-    let phrase = engine.detect(&audio_samples, 0.25)?;
+    let phrase = engine.detect(&audio_samples, 0.5)?;
     println!("{:?}", phrase);
     Ok(())
 }

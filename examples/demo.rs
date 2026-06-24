@@ -10,7 +10,7 @@
 use sonnetics_core::helpers::{ensure_model, MicStream};
 use sonnetics_core::WakeEngine;
 
-const MODEL_ID: &str = "sonnetics-model-efea8354-3f81-4c61-9d50-7452cb901620";
+const MODEL_ID: &str = "sonnetics-model-a770c126-a4ff-4be4-b95e-7e104a01da73";
 
 fn main() -> anyhow::Result<()> {
     let model_path = ensure_model(MODEL_ID)?;
@@ -20,7 +20,7 @@ fn main() -> anyhow::Result<()> {
     println!("🔊 Listening for wake word... (Ctrl+C to stop)");
 
     for chunk in mic {
-        if let Some(phrase) = engine.detect(&chunk, 0.25)? {
+        if let Some(phrase) = engine.detect(&chunk, 0.5)? {
             println!("✅ Heard: {phrase}");
         }
     }
